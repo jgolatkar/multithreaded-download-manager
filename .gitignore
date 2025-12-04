@@ -1,0 +1,35 @@
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# Eclipse / IntelliJ / NetBeans project files
+*.classpath
+*.project
+*.settings/
+*.idea/
+*.iml
+*.ipr
+*.iws
+
+# Build folders
+/bin/
+/out/
+/target/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Swing temporary files
+*.tmp
+
+# Downloaded files (optional, if you store them in project folder)
+*.zip
+*.download
