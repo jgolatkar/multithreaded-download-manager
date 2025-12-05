@@ -1,8 +1,10 @@
 package dev.jitesh.downloadmanager;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.Callable;
@@ -31,16 +33,22 @@ public class DownloadTask implements Callable<Boolean> {
 	@Override
 	public Boolean call() {
 		
-		status.setState(DownloadState.DOWNLOADING);
-		
-		try {
-		    URL url = URI.create(fileUrl).toURL();
+		try {		
+			status.setState(DownloadState.DOWNLOADING);
 			
-			try(InputStream in = url.openStream();
-				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+		    URL url = URI.create(fileUrl).toURL();
+		    
+		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		    conn.setConnectTimeout(5000);
+		    conn.setReadTimeout(10000);
+		    conn.setRequestMethod("GET");
+		    
+		    long totalBytes = conn.getContentLengthLong();
+		    status.setTotalBytes(totalBytes);
+			
+			try(InputStream in = new BufferedInputStream(conn.getInputStream());
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile), 8192)) {
 				
-				long totalBytes = url.openConnection().getContentLengthLong();
-				status.setTotalBytes(totalBytes);
 				
 				byte[] buffer = new byte[4096];
 				int bytesRead;
