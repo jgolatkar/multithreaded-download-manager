@@ -13,7 +13,7 @@ public class DownloadStatus {
 	private DownloadState state;
 	
 	public DownloadStatus() {
-        this.state = DownloadState.QUEUED;
+        this.state = DownloadState.PENDING;
         this.totalBytes = 0;
         this.downloadedBytes = 0;
         this.errorMessage = null;
@@ -51,5 +51,9 @@ public class DownloadStatus {
         return errorMessage;
     }
 	
+	public synchronized int getProgressPercent() {
+		if (totalBytes <= 0) return -1;
+		return (int) Math.min(100, (downloadedBytes * 100) / totalBytes);
+	}
 	
 }
