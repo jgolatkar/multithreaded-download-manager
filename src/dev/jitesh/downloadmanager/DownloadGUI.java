@@ -54,6 +54,7 @@ public class DownloadGUI {
 		frame.setSize(700, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(8, 8));
+		outField.setToolTipText("Leave empty to save in Downloads folder");
 		
 		// Top Input Panel
 		JPanel topPanel = new JPanel(new GridBagLayout());
@@ -104,8 +105,8 @@ public class DownloadGUI {
 		String url = urlField.getText().trim();
 		String saveAs = outField.getText().trim();
 		
-		if (url.isEmpty() || saveAs.isEmpty()) {
-			JOptionPane.showMessageDialog(frame, "Provide both URL and Save As path", "Input Required", JOptionPane.WARNING_MESSAGE);
+		if (url.isEmpty()) {
+			JOptionPane.showMessageDialog(frame, "Provide URL", "Input Required", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		

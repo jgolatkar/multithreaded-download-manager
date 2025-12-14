@@ -1,5 +1,8 @@
 package dev.jitesh.downloadmanager;
 
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,12 +46,15 @@ public class DownloadManager {
 		PauseToken token = new PauseToken();
 		
 		status.setState(DownloadState.QUEUED);
+		
+		Path resolvedPath = resolveOutputPath(url, saveAs);
+		
 		statusMap.put(id, status);
 		tokenMap.put(id, token);
 		urlMap.put(id, url);
-		pathMap.put(id, saveAs);
+		pathMap.put(id, resolvedPath.toString());
 		
-		DownloadTask task = new DownloadTask(url, saveAs, status, token);
+		DownloadTask task = new DownloadTask(url, resolvedPath.toString(), status, token);
 		Future<Boolean> future = pool.submit(task);
 		futureMap.put(id, future);
 		
@@ -113,5 +119,22 @@ public class DownloadManager {
 	
     public Map<Integer, DownloadStatus> getAllStatuses() {
         return Collections.unmodifiableMap(statusMap);
+    }
+    
+    private Path resolveOutputPath(String url, String outputPath) {
+    	
+    	// if user provided a valid path, use it
+    	if (outputPath != null && !outputPath.isBlank()) {
+    		return Paths.get(outputPath);
+    	}
+    	
+    	// otherwise, save to ~/Downloads directory
+    	String home = System.getProperty("user.home");
+    	Path downloadDir = Paths.get(home,"Downloads");
+    	
+    	// extract filename from url
+    	String fileName = Paths.get(URI.create(url).getPath()).getFileName().toString();
+    	
+    	return downloadDir.resolve(fileName);
     }
 }
