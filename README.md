@@ -22,3 +22,6 @@ This project is built to learn and demonstrate:
 - Multithreading in Java
 - Safe pause/resume mechanisms
 - Separation of GUI and download logic
+
+## Demo:
+![DownloadManager Demo](assets/demo.gif)
